@@ -11,7 +11,23 @@ end
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
+  puts "3. Save the list to students.csv"
   puts "9. Exit"
+end
+
+def process(selection)
+  case selection
+    when "1"
+      students = input_students
+    when "2"
+      show_students
+    when "3"
+      save_students
+    when "9"
+      exit
+    else
+      puts "Unknown command"
+  end
 end
 
 def show_students
@@ -22,19 +38,17 @@ def show_students
   end
 end
 
-def process(selection)
-  case selection
-    when "1"
-      students = input_students
-    when "2"
-      show_students
-    when "9"
-      exit
-    else
-      puts "Unknown command"
+def save_students
+  file = File.open("students.csv", "w")
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort], student[:hobby], student[:country]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
   end
+  file.close
+  puts "List saved to students.csv"
 end
-
+  
 def input_students
   puts "Please enter the details of the students"
   puts "To finish, just hit return twice"
