@@ -1,3 +1,5 @@
+require 'csv'
+
 @students = []
 @cohorts = [:january, :november, :august]
 
@@ -45,11 +47,9 @@ def save_students
   puts "Enter the filename:"
   filename = STDIN.gets.chomp
   if File.exist?(filename)
-    File.open("students.csv", "w") do |file|
+    CSV.open("students.csv", "w") do |csv|
       @students.each do |student|
-        student_data = [student[:name], student[:cohort], student[:hobby], student[:country]]
-        csv_line = student_data.join(",")
-        file.puts csv_line
+        csv << [student[:name], student[:cohort], student[:hobby], student[:country]]
       end
     end
     puts "List saved to students.csv"
@@ -59,11 +59,8 @@ def save_students
 end
   
 def load_students(filename = "students.csv")
-  File.open(filename, "r") do |file|
-    file.readlines.each do|line|
-      name, cohort, hobby, country = line.chomp.split(',')
-      @students << {name: name, cohort: cohort.to_sym, hobby: hobby, country: country}
-    end
+  CSV.foreach(filename) do |row|
+    @students << {name: row[0], cohort: row[1].to_sym, hobby: row[2], country: row[3]}
   end
   puts "Students loaded successfully."
 end
